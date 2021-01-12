@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+    <h1>
+        Index
+    </h1>
+    <ul>
+        {% for rendered in rendereds %}
+        <li> {{rendered}} </li>
+        {% endfor %}
+    </ul>
+    <form action="/index" method="POST">
+        <input type="text" name="name" placeholder="Enter name">
+        <select name="file">
+            {% for fname in excel_files %}
+            <option value={{fname}}>{{fname}}</option>
+            {% endfor %}
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+
+</html>
