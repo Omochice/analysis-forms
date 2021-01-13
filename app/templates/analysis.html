@@ -1,0 +1,19 @@
+{%- extends "tpl.html" %}
+{%- block content %}
+
+<h2>{{name}}班の分析結果</h2>
+
+{% for imgname in imgnames %}
+<img src="{{url_for('static', filename='img/'+imgname)}}" alt="{{imgname}}">
+{% endfor %}
+
+<h2>メッセージ</h2>
+
+<ul>
+    {% for message in messages %}
+    <li>{{message}}</li>
+    {% endfor %}
+</ul>
+
+
+{%- endblock %}

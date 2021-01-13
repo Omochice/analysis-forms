@@ -1,0 +1,16 @@
+{%- extends "tpl.html" %}
+
+
+{%- block content %}
+<h2>分析済みの班</h2>
+{% if groups %}
+<ul>
+    {% for group in groups %}
+    <li><a href="/show/{{group}}">{{group}}班</a></li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>分析済みの班はありません</p>
+{% endif %}
+
+{% endblock %}

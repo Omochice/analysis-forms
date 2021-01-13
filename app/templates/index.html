@@ -1,27 +1,19 @@
-<!DOCTYPE html>
-<html>
+{%- extends "tpl.html" %}
+{%- block content %}
 
-<head>
-</head>
-
-<body>
-    <h1>
-        Index
-    </h1>
-    <ul>
-        {% for rendered in rendereds %}
-        <li> {{rendered}} </li>
+<form action="/post" method="POST">
+    <select name="file">
+        {% for fname in excel_files %}
+        <option value={{fname}}>{{fname}}</option>
         {% endfor %}
-    </ul>
-    <form action="/index" method="POST">
-        <input type="text" name="name" placeholder="Enter name">
-        <select name="file">
-            {% for fname in excel_files %}
-            <option value={{fname}}>{{fname}}</option>
-            {% endfor %}
-        </select>
-        <input type="submit" value="Submit">
-    </form>
-</body>
+    </select>
+    <input type="number" name="n_groups" placeholder="班の数を入力"><br>
+    <input type="submit" value="Submit">
+</form>
+<ul>
+    {% for rendered in rendereds %}
+    <li> {{rendered}} </li>
+    {% endfor %}
+</ul>
 
-</html>
+{%- endblock %}

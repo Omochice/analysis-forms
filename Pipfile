@@ -9,9 +9,13 @@ matplotlib = "*"
 flask = "*"
 janome = "*"
 japanize-matplotlib = "*"
+xlrd = "*"
+openpyxl = "*"
 
 [dev-packages]
 yapf = "*"
+ptpython = "*"
+ptipython = "*"
 
 [requires]
 python_version = "3.9"
