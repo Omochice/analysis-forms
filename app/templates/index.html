@@ -1,19 +1,19 @@
 {%- extends "tpl.html" %}
 {%- block content %}
 
-<form action="/post" method="POST">
-    <select name="file">
+<form action="/upload" method="POST" enctype=multipart/form-data>
+    <!-- <select name="file">
         {% for fname in excel_files %}
         <option value={{fname}}>{{fname}}</option>
-        {% endfor %}
+        {% endfor %} -->
     </select>
     <input type="number" name="n_groups" placeholder="班の数を入力"><br>
     <input type="submit" value="Submit">
+
+
+    <br>
+    <input type="file" name="upload_file">
 </form>
-<ul>
-    {% for rendered in rendereds %}
-    <li> {{rendered}} </li>
-    {% endfor %}
-</ul>
+
 
 {%- endblock %}
