@@ -1,18 +1,27 @@
 {%- extends "tpl.html" %}
 {%- block content %}
 
-<form action="/upload" method="POST" enctype=multipart/form-data>
-    <!-- <select name="file">
+<form action="/upload" method="POST" enctype=multipart/form-data class="pure-form pure-form-aligned">
+    <fieldset>
+        <!-- <select name="file">
         {% for fname in excel_files %}
         <option value={{fname}}>{{fname}}</option>
-        {% endfor %} -->
-    </select>
-    <input type="number" name="n_groups" placeholder="班の数を入力"><br>
-    <input type="submit" value="Submit">
+        {% endfor %}
+    </select> -->
+        <div class="pure-control-group">
+            <label for="file-upload">分析するファイル</label>
+            <input type="file" name="upload_file" id="file-upload">
+        </div>
+        <div class="pure-control-group">
+            <label for="number-of-group">班の数</label>
+            <input type="number" name="n_groups" placeholder="班の数を入力" id="number-of-group" min=1>
+        </div>
+        <div class="pure-controls">
+            <input type="submit" value="Submit" class="pure-button pure-button-primary">
+        </div>
+    </fieldset>
 
 
-    <br>
-    <input type="file" name="upload_file">
 </form>
 
 
