@@ -33,3 +33,50 @@
     border: none;
     color: #aecfe5;
 }
+
+.button-warning {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0,0,0, 0.2);
+    background-color: rgb(223,117,20);
+}
+
+.balloon-left {
+    position: relative;
+    display: inline-block;
+    margin: 1.5em 0 1.5em 15px;
+    padding: 7px 10px;
+    min-width: 120px;
+    max-width: 100%;
+    color: #555555;
+    background: #ffffff;
+    border: solid 3px #555555;
+    box-sizing: border-box;
+}
+
+.balloon-left:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -24px;
+    margin-top: -12px;
+    border: 12px solid transparent;
+    border-right: 12px solid #ffffff;
+    z-index: 2;
+}
+
+.balloon-left:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -30px;
+    margin-top: -14px;
+    border: 14px solid transparent;
+    border-right: 14px solid #555555;
+    z-index: 1;
+}
+
+.balloon-left p {
+    margin: 0;
+    padding: 0;
+}

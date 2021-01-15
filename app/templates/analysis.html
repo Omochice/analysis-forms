@@ -1,13 +1,19 @@
 {%- extends "tpl.html" %}
 {%- block content %}
 
-<h2>{{name}}班の分析結果</h2>
+<h2 class="balloon-left">{{name}}班の分析結果</h2>
 
-{% for imgname in imgnames %}
-<img src="{{url_for('static', filename='img/'+imgname)}}" alt="{{imgname}}">
+{% for sublist in imgnames %}
+<div class="pure-g">
+    {% for img in sublist %}
+    <div class="pure-u-1-2">
+        <img src="{{img}}" alt="chart-img" class="pure-img">
+    </div>
+    {% endfor %}
+</div>
 {% endfor %}
 
-<h2>メッセージ</h2>
+<h2 class="balloon-left">メッセージ</h2>
 
 <ul>
     {% for message in messages %}

@@ -3,7 +3,7 @@ import json
 from pathlib import Path
 import os
 
-from .models import analysis_form, is_allowed_file
+from .models import analysis_form, is_allowed_file, make_sublist
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
@@ -44,31 +44,49 @@ def show(groupname: int):
         data = json.load(f)
     return render_template("analysis.html",
                            name=groupname,
-                           imgnames=data["images"],
+                           imgnames=make_sublist([url_for("static", filename=f"img/{p}") for p in data["images"]], 2),
                            messages=data["messages"])
 
 
 @app.route("/upload", methods=["POST"])
 def upload_file():
-    print(request.files)
     if "upload_file" not in request.files:
         flash("No file part")
         return redirect(url_for("root"))
     else:
         file = request.files["upload_file"]
-        print(file)
         n_groups = int(request.form["n_groups"])
         if file.filename == "":
             flash("No selecterd file")
             return redirect(url_for("root"))
         elif file and is_allowed_file(file.filename, ALLOWED_EXT):
             filename = secure_filename(file.filename)
-            print(filename)
             dst = UPLOAD_DIR / filename
             file.save(dst)
             analysis_form(dst, n_groups)
             return redirect(url_for("show_all"))
 
+# @app.route("/chart")
+# def chart():
+#     render_template("chart.html", labels=labels, data=data)
+
+@app.route("/delete", methods=["POST", "DELETE"])
+def delete():
+    # remove files
+    # rm uploaded/* app/static/img/*.pmg app/static/*.json
+    for p in (pwd / "uploaded").glob("*"):
+        if p.is_file():
+            os.remove(str(p))
+    
+    for p in (pwd / "app"/"static"/ "img").glob("*.png"):
+        if p.is_file():
+            os.remove(str(p))
+
+    for p in (pwd / "app"/"static"/ "messages").glob("*.json"):
+        if p.is_file():
+            os.remove(str(p))
+
+    return redirect(url_for("root"))
 
 if __name__ == "__main__":
     app.run(debug=True)

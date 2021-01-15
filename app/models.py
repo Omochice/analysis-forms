@@ -1,13 +1,13 @@
-from typing import Tuple, List
 import json
+import os
+import re
+from collections import Counter
 from pathlib import Path
-import pandas as pd
+from typing import List, Tuple
+
 import matplotlib.pyplot as plt
 import japanize_matplotlib
-
-import re
-import os
-from collections import Counter
+import pandas as pd
 
 matcher = re.compile(r"([1-9 １-９]+)班_(\w+)")
 
@@ -45,14 +45,14 @@ def analysis(df: pd.DataFrame) -> None:
                     autopct="%.1f%%")
             plt.title(evaluates)
             dst = str(img_dir / row_name) + ext
-            plt.savefig(dst)
+            plt.savefig(dst, bbox_inches="tight", pad_inches=0.1)
 
     with open(img_dir.parent / "messages" / (group_name + ".json"), "w") as f:
         json.dump(
             {
                 "images": [x + ext for x in row_names[:-1]],
                 "messages": list(
-                    map(lambda x: x.replace("\n", "<br>"), df[row_names[-1]]))
+                    map(lambda x: x.replace("\n", "<br>"), df[row_names[-1]])),
             },
             f,
             ensure_ascii=False)
@@ -71,3 +71,6 @@ def analysis_form(filename: os.PathLike, n_group: int) -> None:
 
 def is_allowed_file(filename: str, allowd_ext: set) -> bool:
     return filename.rsplit(".", 1)[1].lower() in allowd_ext
+
+def make_sublist(l: list, len_sublist:int) -> list:
+    return [l[i:i+len_sublist] for i in range(0, len(l), len_sublist)]
