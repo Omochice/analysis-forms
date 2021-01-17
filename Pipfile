@@ -12,6 +12,7 @@ openpyxl = "*"
 xlrd = "*"
 asari = {git = "https://github.com/Hironsan/asari"}
 scikit-learn = "==0.23"
+gunicorn = "*"
 
 [dev-packages]
 yapf = "*"
