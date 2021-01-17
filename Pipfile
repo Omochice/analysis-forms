@@ -4,18 +4,17 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
-matplotlib = "*"
 flask = "*"
-janome = "*"
+matplotlib = "*"
 japanize-matplotlib = "*"
-xlrd = "*"
+pandas = "*"
 openpyxl = "*"
+xlrd = "*"
+asari = {git = "https://github.com/Hironsan/asari"}
+scikit-learn = "==0.23"
 
 [dev-packages]
 yapf = "*"
-ptpython = "*"
-ptipython = "*"
 
 [requires]
 python_version = "3.9"

@@ -13,13 +13,27 @@
 </div>
 {% endfor %}
 
+<!-- {% for title in titles %}
+<canvas id="chart{title.index}"></canvas>
+{% endfor %} -->
+
 <h2 class="balloon-left">メッセージ</h2>
 
+<h3 class="">positive</h3>
 <ul>
-    {% for message in messages %}
-    <li>{{message}}</li>
+    {% for positive in positives %}
+    <li>{{positive}}</li>
+    {% endfor %}
+</ul>
+
+<h3>negative</h3>
+<ul>
+    {% for negative in negatives %}
+    <li>{{negative}}</li>
     {% endfor %}
 </ul>
 
 
+<!-- <script type="text/javascript">
+</script> -->
 {%- endblock %}

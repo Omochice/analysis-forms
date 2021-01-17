@@ -42,10 +42,13 @@ def show_all():
 def show(groupname: int):
     with open(pwd / "app" / "static" / "messages" / f"{groupname}.json") as f:
         data = json.load(f)
-    return render_template("analysis.html",
-                           name=groupname,
-                           imgnames=make_sublist([url_for("static", filename=f"img/{p}") for p in data["images"]], 2),
-                           messages=data["messages"])
+    return render_template(
+        "analysis.html",
+        name=groupname,
+        imgnames=make_sublist(
+            [url_for("static", filename=f"img/{p}") for p in data["images"]], 2),
+        positives=data["comments"]["positive"],
+        negatives=data["comments"]["negative"])
 
 
 @app.route("/upload", methods=["POST"])
@@ -66,27 +69,25 @@ def upload_file():
             analysis_form(dst, n_groups)
             return redirect(url_for("show_all"))
 
-# @app.route("/chart")
-# def chart():
-#     render_template("chart.html", labels=labels, data=data)
 
 @app.route("/delete", methods=["POST", "DELETE"])
 def delete():
     # remove files
-    # rm uploaded/* app/static/img/*.pmg app/static/*.json
+    # rm uploaded/* app/static/img/*.png app/static/*.json
     for p in (pwd / "uploaded").glob("*"):
         if p.is_file():
             os.remove(str(p))
-    
-    for p in (pwd / "app"/"static"/ "img").glob("*.png"):
+
+    for p in (pwd / "app" / "static" / "img").glob("*.png"):
         if p.is_file():
             os.remove(str(p))
 
-    for p in (pwd / "app"/"static"/ "messages").glob("*.json"):
+    for p in (pwd / "app" / "static" / "messages").glob("*.json"):
         if p.is_file():
             os.remove(str(p))
 
     return redirect(url_for("root"))
 
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
