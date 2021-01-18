@@ -56,7 +56,7 @@ def analysis(df: pd.DataFrame) -> None:
                     },
                     autopct="%.1f%%")
             plt.title(evaluates)
-            score = {evaluates: {"labels": labels, "values": scored_numbers}}
+            score = {"title": evaluates, "labels": labels, "values": scored_numbers}
             analysis_result["scores"].append(score)
             dst = str(img_dir / row_name) + ext
             plt.savefig(dst, bbox_inches="tight", pad_inches=0.1)
