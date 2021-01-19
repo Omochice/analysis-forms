@@ -3,11 +3,6 @@
 
 <form action="{{url_for('upload_file')}}" method="POST" enctype=multipart/form-data class="pure-form pure-form-aligned">
     <fieldset>
-        <!-- <select name="file">
-        {% for fname in excel_files %}
-        <option value={{fname}}>{{fname}}</option>
-        {% endfor %}
-    </select> -->
         <div class="pure-control-group">
             <label for="file-upload">分析するファイル</label>
             <input type="file" name="upload_file" id="file-upload">

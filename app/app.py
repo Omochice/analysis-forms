@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, url_for, redirect, flash
 import json
-from pathlib import Path
 import os
+from pathlib import Path
 
-from .models import analysis_form, is_allowed_file, make_sublist
+from flask import Flask, flash, redirect, render_template, request, url_for
 from werkzeug.utils import secure_filename
+
+from .models import analysis_form, is_allowed_file
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
@@ -22,15 +23,6 @@ def root():
     return render_template("index.html", excel_files=list(pwd.glob("*.xlsx")))
 
 
-# @app.route("/post", methods=["POST"])
-# def post():
-#     name = request.form["file"]
-#     n_groups = request.form["n_groups"]
-#     analysis_form(pwd.resolve() / name, int(n_groups))
-#     return redirect(url_for("show_all"))
-#     # return render_template("index.html")
-
-
 @app.route("/show")
 def show_all():
     analysised_groups = sorted(
@@ -42,13 +34,13 @@ def show_all():
 def show(groupname: int):
     with open(pwd / "app" / "static" / "messages" / f"{groupname}.json") as f:
         data = json.load(f)
-    return render_template(
-        "analysis.html",
-        name=groupname,
-        imgnames=make_sublist(
-            [url_for("static", filename=f"img/{p}") for p in data["images"]], 2),
-        positives=data["comments"]["positive"],
-        negatives=data["comments"]["negative"])
+    return render_template("analysis.html",
+                           name=groupname,
+                           positives=data["comments"]["positive"],
+                           negatives=data["comments"]["negative"],
+                           data=data["scores"],
+                           n_data=[[i, i + 1]
+                                   for i in range(0, len(data["scores"]), 2)])
 
 
 @app.route("/upload", methods=["POST"])
@@ -78,9 +70,9 @@ def delete():
         if p.is_file():
             os.remove(str(p))
 
-    for p in (pwd / "app" / "static" / "img").glob("*.png"):
-        if p.is_file():
-            os.remove(str(p))
+    # for p in (pwd / "app" / "static" / "img").glob("*.png"):
+    #     if p.is_file():
+    #         os.remove(str(p))
 
     for p in (pwd / "app" / "static" / "messages").glob("*.json"):
         if p.is_file():

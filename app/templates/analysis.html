@@ -3,37 +3,100 @@
 
 <h2 class="balloon-left">{{name}}班の分析結果</h2>
 
-{% for sublist in imgnames %}
+{% for row in n_data %}
 <div class="pure-g">
-    {% for img in sublist %}
+    {% for v in row %}
     <div class="pure-u-1-2">
-        <img src="{{img}}" alt="chart-img" class="pure-img">
+        <div>
+            <canvas id="chart{{v}}"></canvas> </canvas>
+        </div>
     </div>
     {% endfor %}
 </div>
 {% endfor %}
 
-<!-- {% for title in titles %}
-<canvas id="chart{title.index}"></canvas>
-{% endfor %} -->
-
 <h2 class="balloon-left">メッセージ</h2>
 
-<h3 class="">positive</h3>
 <ul>
     {% for positive in positives %}
     <li>{{positive}}</li>
     {% endfor %}
-</ul>
-
-<h3>negative</h3>
-<ul>
     {% for negative in negatives %}
     <li>{{negative}}</li>
     {% endfor %}
 </ul>
 
 
-<!-- <script type="text/javascript">
-</script> -->
+<script type="text/javascript">
+    let dataLabelPlugin = {
+        afterDatasetsDraw: function (chart, easing) {
+            // To only draw at the end of animation, check for easing === 1
+            const ctx = chart.ctx;
+
+            chart.data.datasets.forEach(function (dataset, i) {
+                let dataSum = 0;
+                dataset.data.forEach(function (element) {
+                    dataSum += element;
+                });
+
+                const meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function (element, index) {
+                        // Draw the text in black, with the specified font
+                        ctx.fillStyle = 'rgb(0, 0, 0)';
+
+                        const fontSize = 14;
+                        const fontStyle = 'normal';
+                        const fontFamily = 'Helvetica Neue';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                        // Just naively convert to string for now
+                        const dataString = (Math.round(dataset.data[index] / dataSum * 1000) / 10).toString() + "%";
+
+                        // Make sure alignment settings are correct
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+
+                        const padding = 5;
+                        const position = element.tooltipPosition();
+                        ctx.fillText(dataString, position.x, position.y + (fontSize / 2) - padding);
+                    });
+                }
+            });
+        }
+    };
+
+    const data = {{ data | tojson}}
+
+    // plot each contexts
+    for (const [index, d] of data.entries()) {
+        const ctx = document.getElementById("chart" + index.toString()).getContext("2d")
+        const chart = new Chart(ctx, {
+            type: "pie",
+            data: {
+                labels: d["labels"],
+                datasets: [{
+                    lables: "test",
+                    data: d["values"]
+                }]
+            },
+            options: {
+                title: {
+                    display: true,
+                    text: d["title"],
+                    fontSize: 20
+                },
+                plugins: {
+                    colorschemes: {
+                        scheme: "brewer.SetOne5"
+                    }
+                }
+            },
+            plugins: [dataLabelPlugin]
+        })
+    }
+</script>
+
+
+
 {%- endblock %}

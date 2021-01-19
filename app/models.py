@@ -5,11 +5,8 @@ from collections import Counter
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
-import japanize_matplotlib
-import matplotlib.pyplot as plt
 import pandas as pd
 from asari.api import Sonar
-from numpy.lib.shape_base import apply_along_axis
 
 matcher = re.compile(r"([1-9 １-９]+)班_(\w+)")
 sonar = Sonar()
@@ -45,24 +42,10 @@ def analysis(df: pd.DataFrame) -> None:
             group_name, evaluates = match_groups
             counter = Counter(df[row_name])
             labels, scored_numbers = transpose_counter(counter)
-            plt.clf()
-            plt.pie(scored_numbers,
-                    labels=labels,
-                    counterclock=False,
-                    startangle=90,
-                    wedgeprops={
-                        "linewidth": 3,
-                        "edgecolor": "white"
-                    },
-                    autopct="%.1f%%")
-            plt.title(evaluates)
             score = {"title": evaluates, "labels": labels, "values": scored_numbers}
             analysis_result["scores"].append(score)
-            dst = str(img_dir / row_name) + ext
-            plt.savefig(dst, bbox_inches="tight", pad_inches=0.1)
 
-    nega_posi = classification_comments(
-        map(lambda x: x.replace("\n", "<br>"), df[row_names[-1]]))
+    nega_posi = classification_comments(df[row_names[-1]].dropna())
     analysis_result["comments"] = {
         "positive": nega_posi["positive"],
         "negative": nega_posi["negative"]
@@ -85,7 +68,3 @@ def analysis_form(filename: os.PathLike, n_group: int) -> None:
 
 def is_allowed_file(filename: str, allowd_ext: set) -> bool:
     return filename.rsplit(".", 1)[1].lower() in allowd_ext
-
-
-def make_sublist(l: list, len_sublist: int) -> list:
-    return [l[i:i + len_sublist] for i in range(0, len(l), len_sublist)]
