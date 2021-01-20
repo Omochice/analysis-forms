@@ -34,16 +34,13 @@ def analysis(df: pd.DataFrame) -> None:
     row_names = df.columns.values
     ext = ".png"
     analysis_result = {"images": [x + ext for x in row_names[:-1]], "scores": []}
-    for row_name in row_names:    # 最後の一個はアドバイスが入っていると仮定する
-        if row_name == row_names[-1]:
-            break
-        else:
-            match_groups = matcher.match(row_name).groups()
-            group_name, evaluates = match_groups
-            counter = Counter(df[row_name])
-            labels, scored_numbers = transpose_counter(counter)
-            score = {"title": evaluates, "labels": labels, "values": scored_numbers}
-            analysis_result["scores"].append(score)
+    for row_name in row_names[:-1]:    # 最後の一個はアドバイスが入っていると仮定する
+        match_groups = matcher.match(row_name).groups()
+        group_name, evaluates = match_groups
+        counter = Counter(df[row_name])
+        labels, scored_numbers = transpose_counter(counter)
+        score = {"title": evaluates, "labels": labels, "values": scored_numbers}
+        analysis_result["scores"].append(score)
 
     nega_posi = classification_comments(df[row_names[-1]].dropna())
     analysis_result["comments"] = {
@@ -66,5 +63,3 @@ def analysis_form(filename: os.PathLike, n_group: int) -> None:
         analysis(df.iloc[:, start:end])
 
 
-def is_allowed_file(filename: str, allowd_ext: set) -> bool:
-    return filename.rsplit(".", 1)[1].lower() in allowd_ext
