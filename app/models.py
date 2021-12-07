@@ -21,7 +21,12 @@ def classification_comments(comments: Iterable[str]) -> Dict[str, List[str]]:
 
 
 def transpose_counter(scores: Counter) -> Tuple[List[str], List[int]]:
-    list_score_and_numbers = reversed(sorted(list(scores.items()), key=lambda x: x[0]))
+    list_score_and_numbers = reversed(
+        sorted(
+            list(scores.items()),
+            key=lambda x: x[0],
+        ),
+    )
     score, numbers = [], []
     for s, n in list_score_and_numbers:
         score.append(s)
@@ -29,18 +34,31 @@ def transpose_counter(scores: Counter) -> Tuple[List[str], List[int]]:
     return score, numbers
 
 
+def extract_num(s, p, ret=0):
+    search = p.search(s)
+    if search:
+        return int(search.groups()[0])
+    else:
+        return ret
+
+
 def analysis(df: pd.DataFrame) -> None:
     img_dir = Path(__file__).parent / "static" / "img"
     row_names = df.columns.values
     ext = ".png"
     analysis_result = {"images": [x + ext for x in row_names[:-1]], "scores": []}
-    for row_name in row_names:    # 最後の一個はアドバイスが入っていると仮定する
+    for row_name in row_names:  # 最後の一個はアドバイスが入っていると仮定する
         if row_name == row_names[-1]:
             break
         else:
+            print(row_name, matcher.search(row_name).groups())
             match_groups = matcher.search(row_name).groups()
             group_name, evaluates = match_groups
             counter = Counter(df[row_name])
+            for i in range(1, 6):
+                if i not in counter:
+                    counter[i] = 0
+            del counter[0]
             labels, scored_numbers = transpose_counter(counter)
             score = {"title": evaluates, "labels": labels, "values": scored_numbers}
             analysis_result["scores"].append(score)
@@ -48,7 +66,7 @@ def analysis(df: pd.DataFrame) -> None:
     nega_posi = classification_comments(df[row_names[-1]].dropna())
     analysis_result["comments"] = {
         "positive": nega_posi["positive"],
-        "negative": nega_posi["negative"]
+        "negative": nega_posi["negative"],
     }
 
     with open(img_dir.parent / "messages" / (group_name + ".json"), "w") as f:
@@ -58,7 +76,7 @@ def analysis(df: pd.DataFrame) -> None:
 def analysis_form(filename: os.PathLike, n_group: int) -> None:
     print(filename)
     df = pd.read_excel(filename)
-    n_index = 5    # 左側の使わない列数
+    n_index = 5  # 左側の使わない列数
     n_each = (len(df.columns) - 4) // n_group
     for i in range(n_group):
         start = n_index + i * n_each
