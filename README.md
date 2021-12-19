@@ -2,8 +2,11 @@
 
 ## Usase
 
+Must register `SEC_WORD` as environment variable.
+I recommend that using `.env` is useful because `pipenv` load it automatically.
+
 ```sh
-pipenv run python run.py
+pipenv run server
 ```
 
 ## Format of import data
@@ -14,7 +17,11 @@ Import data must has the headers like below:
 ID,開始時刻,完了時刻,メール,名前,1班_発表資料,...アドバイス,2班_発表資料,...,
 ```
 
-The 5 left side columns is ignored.
+You can use group name like `[0-9０-９A-Za-z]班?`.
+
+`_` is needed because it use as separater.
+
+5 left side columns is ignored.
 
 Remained N columns is devided given number(it specity on web interface).
 Devideds will be like:
