@@ -8,7 +8,7 @@ from typing import Dict, Iterable, List, Tuple
 import pandas as pd
 from asari.api import Sonar
 
-matcher = re.compile(r"([0-9 ０-９]+)[班]?_(\w+)")
+matcher = re.compile(r"([0-9０-９a-zA-Z]+)[班]?_(\w+)")
 sonar = Sonar()
 
 
@@ -51,7 +51,8 @@ def analysis(df: pd.DataFrame) -> None:
         if row_name == row_names[-1]:
             break
         else:
-            print(row_name, matcher.search(row_name).groups())
+            print(row_name, end="")
+            print(matcher.search(row_name).groups())
             match_groups = matcher.search(row_name).groups()
             group_name, evaluates = match_groups
             counter = Counter(df[row_name])
