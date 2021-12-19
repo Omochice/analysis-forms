@@ -30,8 +30,8 @@ def show_all():
     return render_template("show_all.html", groups=analysised_groups)
 
 
-@app.route("/show/<int:groupname>")
-def show(groupname: int):
+@app.route("/show/<groupname>")
+def show(groupname: str):
     with open(pwd / "app" / "static" / "messages" / f"{groupname}.json") as f:
         data = json.load(f)
     return render_template("analysis.html",
